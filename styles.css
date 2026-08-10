@@ -1,0 +1,441 @@
+/* ========================================
+   OZONE LOUNGE KARAOKE - BEAUTIFUL CSS
+   ======================================== */
+
+:root {
+  --primary-color: #FF6B9D;
+  --secondary-color: #4A90E2;
+  --accent-color: #F8B739;
+  --dark-bg: #1a1a1a;
+  --light-bg: #f5f5f5;
+  --text-color: #333;
+  --shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  --transition: all 0.3s ease-in-out;
+}
+
+/* ========================================
+   GENERAL STYLING
+   ======================================== */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background-attachment: fixed;
+  min-height: 100vh;
+  padding: 20px;
+  color: var(--text-color);
+}
+
+/* ========================================
+   CONTAINER & LAYOUT
+   ======================================== */
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 30px;
+  padding: 20px;
+}
+
+/* ========================================
+   IMAGE CARD STYLING
+   ======================================== */
+
+.image-card {
+  position: relative;
+  border-radius: 15px;
+  overflow: hidden;
+  background: white;
+  box-shadow: var(--shadow);
+  transition: var(--transition);
+  cursor: pointer;
+  transform: translateY(0);
+}
+
+.image-card:hover {
+  transform: translateY(-15px);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+}
+
+/* ========================================
+   IMAGE STYLING
+   ======================================== */
+
+.image-wrapper {
+  position: relative;
+  width: 100%;
+  padding-bottom: 100%;
+  overflow: hidden;
+  background: var(--light-bg);
+}
+
+.image-wrapper img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: var(--transition);
+  filter: brightness(1);
+}
+
+/* Hover Effect: Zoom & Brightness */
+.image-card:hover .image-wrapper img {
+  transform: scale(1.15);
+  filter: brightness(0.85);
+}
+
+/* Overlay on Hover */
+.image-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(255, 107, 157, 0.7), rgba(74, 144, 226, 0.7));
+  opacity: 0;
+  transition: var(--transition);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+}
+
+.image-card:hover .image-overlay {
+  opacity: 1;
+}
+
+.overlay-icon {
+  width: 60px;
+  height: 60px;
+  background: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30px;
+  transform: scale(0);
+  transition: var(--transition);
+}
+
+.image-card:hover .overlay-icon {
+  transform: scale(1);
+}
+
+/* ========================================
+   IMAGE INFO SECTION
+   ======================================== */
+
+.image-info {
+  padding: 20px;
+  background: white;
+  transition: var(--transition);
+}
+
+.image-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--primary-color);
+  margin-bottom: 8px;
+  transition: var(--transition);
+}
+
+.image-card:hover .image-title {
+  color: var(--secondary-color);
+}
+
+.image-description {
+  font-size: 14px;
+  color: #666;
+  line-height: 1.5;
+  margin-bottom: 12px;
+}
+
+.image-date {
+  font-size: 12px;
+  color: #999;
+  font-style: italic;
+}
+
+/* ========================================
+   BUTTON STYLING
+   ======================================== */
+
+.btn {
+  display: inline-block;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  text-decoration: none;
+  text-align: center;
+}
+
+.btn-primary {
+  background: var(--primary-color);
+  color: white;
+}
+
+.btn-primary:hover {
+  background: #e85a8a;
+  box-shadow: 0 8px 20px rgba(255, 107, 157, 0.4);
+  transform: translateY(-2px);
+}
+
+.btn-secondary {
+  background: var(--secondary-color);
+  color: white;
+}
+
+.btn-secondary:hover {
+  background: #3a7bc8;
+  box-shadow: 0 8px 20px rgba(74, 144, 226, 0.4);
+  transform: translateY(-2px);
+}
+
+.btn-accent {
+  background: var(--accent-color);
+  color: white;
+}
+
+.btn-accent:hover {
+  background: #f5a820;
+  box-shadow: 0 8px 20px rgba(248, 183, 57, 0.4);
+  transform: translateY(-2px);
+}
+
+/* ========================================
+   HEADER STYLING
+   ======================================== */
+
+header {
+  text-align: center;
+  margin-bottom: 50px;
+  animation: slideInDown 0.6s ease-out;
+}
+
+h1 {
+  font-size: 42px;
+  color: white;
+  margin-bottom: 10px;
+  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
+  letter-spacing: 2px;
+}
+
+h1 span {
+  color: var(--accent-color);
+}
+
+.subtitle {
+  font-size: 18px;
+  color: rgba(255, 255, 255, 0.9);
+  text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* ========================================
+   RESPONSIVE IMAGE EFFECTS
+   ======================================== */
+
+@media (max-width: 768px) {
+  .gallery {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+  }
+
+  h1 {
+    font-size: 32px;
+  }
+
+  .image-card:hover {
+    transform: translateY(-10px);
+  }
+}
+
+/* ========================================
+   ANIMATIONS
+   ======================================== */
+
+@keyframes slideInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.image-card {
+  animation: fadeIn 0.6s ease-out;
+}
+
+/* ========================================
+   FOOTER STYLING
+   ======================================== */
+
+footer {
+  text-align: center;
+  padding: 30px 20px;
+  color: rgba(255, 255, 255, 0.8);
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  margin-top: 50px;
+}
+
+footer p {
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
+/* ========================================
+   ACCESSIBILITY & FOCUS STATES
+   ======================================== */
+
+.image-card:focus-within {
+  outline: 3px solid var(--accent-color);
+  outline-offset: -3px;
+}
+
+.btn:focus {
+  outline: 2px solid var(--accent-color);
+  outline-offset: 2px;
+}
+
+/* ========================================
+   FILTER & EFFECTS
+   ======================================== */
+
+.filter-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 40px;
+  flex-wrap: wrap;
+}
+
+.filter-btn {
+  padding: 10px 20px;
+  border: 2px solid white;
+  background: transparent;
+  color: white;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: var(--transition);
+  font-weight: 600;
+}
+
+.filter-btn:hover,
+.filter-btn.active {
+  background: white;
+  color: var(--primary-color);
+  transform: scale(1.05);
+}
+
+/* ========================================
+   SPECIAL HOVER EFFECTS
+   ======================================== */
+
+.image-card.featured {
+  grid-column: span 1;
+}
+
+.image-card.featured:hover .image-wrapper img {
+  transform: scale(1.2) rotate(1deg);
+}
+
+/* Glow Effect */
+.image-card.glow:hover {
+  box-shadow: 0 0 30px rgba(255, 107, 157, 0.6), 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+/* Rotation Effect */
+.image-card.rotate:hover .image-wrapper img {
+  transform: scale(1.15) rotate(5deg);
+}
+
+/* ========================================
+   LIGHTBOX/MODAL STYLING
+   ======================================== */
+
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.9);
+  animation: fadeIn 0.3s ease-out;
+}
+
+.modal.active {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-content {
+  max-width: 90%;
+  max-height: 90vh;
+  border-radius: 10px;
+  position: relative;
+  animation: zoomIn 0.3s ease-out;
+}
+
+.modal-content img {
+  max-width: 100%;
+  max-height: 100%;
+  border-radius: 10px;
+}
+
+@keyframes zoomIn {
+  from {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.modal-close {
+  position: absolute;
+  top: 20px;
+  right: 30px;
+  color: white;
+  font-size: 40px;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.modal-close:hover {
+  color: var(--accent-color);
+  transform: rotate(90deg);
+}
