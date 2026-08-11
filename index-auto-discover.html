@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ozone Lounge — Karaoke</title>
+  <meta name="description" content="Ozone Lounge Karaoke List">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="todo-styles.css">
+  <style>
+    .loading, .error {
+      text-align: center;
+      padding: 40px 20px;
+      font-size: 1rem;
+    }
+    .error { color: #b33; }
+    .image-card img {
+      display: block;
+      width: 100%;
+      height: auto;
+      cursor: pointer;
+    }
+    .image-card a {
+      display: block;
+      color: inherit;
+      text-decoration: none;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+
+    <header>
+      <h1>🎤 OZONE <span>LOUNGE</span></h1>
+      <p class="subtitle">Karaoke List</p>
+      <p class="subtitle">Select a page to view it.</p>
+    </header>
+
+    <main>
+      <div id="gallery" class="gallery">
+        <p class="loading">Loading karaoke pages…</p>
+      </div>
+    </main>
+
+    <footer>
+      <p>🎤 Ozone Lounge Karaoke</p>
+      <p>developed by Pie Corp Limited.</p>
+    </footer>
+
+  </div>
+
+  <div id="imageModal" class="modal" role="dialog" aria-modal="true" aria-label="Karaoke page preview">
+    <button class="modal-close" type="button" aria-label="Close preview">&times;</button>
+    <div class="modal-content">
+      <img id="modalImage" class="modalImage" src="" alt="Karaoke page preview">
+    </div>
+  </div>
+
+  <script>
+    /*
+      Automatically discovers JPEG files in the GitHub repository.
+      No image filenames need to be added manually.
+
+      It checks both the repository root and the "pages" folder.
+      Any .jpg or .jpeg file it finds is displayed automatically.
+    */
+
+    const OWNER = "Frankmoh";
+    const REPO = "Ozone-Lounge-Karaoke-list";
+    const BRANCH = "main";
+
+    const gallery = document.getElementById("gallery");
+    const modal = document.getElementById("imageModal");
+    const modalImage = document.getElementById("modalImage");
+    const closeButton = document.querySelector(".modal-close");
+
+    async function getImages(path = "") {
+      const url =
+        `https://api.github.com/repos/${OWNER}/${REPO}/contents/${path}?ref=${BRANCH}`;
+
+      const response = await fetch(url);
+
+      if (!response.ok) {
+        throw new Error(`GitHub API error: ${response.status}`);
+      }
+
+      return response.json();
+    }
+
+    function isJpeg(file) {
+      return file.type === "file" &&
+        /\.(jpe?g)$/i.test(file.name);
+    }
+
+    async function discoverImages() {
+      // Look in the repository root.
+      const rootItems = await getImages("");
+
+      let images = rootItems.filter(isJpeg);
+
+      // Also look in /pages if it exists.
+      const pagesFolder = rootItems.find(
+        item => item.type === "dir" && item.name.toLowerCase() === "pages"
+      );
+
+      if (pagesFolder) {
+        const pageItems = await getImages(pagesFolder.path);
+        images = images.concat(pageItems.filter(isJpeg));
+      }
+
+      // Sort naturally: 1, 2, 10 rather than 1, 10, 2.
+      images.sort((a, b) =>
+        a.name.localeCompare(b.name, undefined, { numeric: true, sensitivity: "base" })
+      );
+
+      return images;
+    }
+
+    function createCard(file, index) {
+      const article = document.createElement("article");
+      article.className = "image-card";
+      article.tabIndex = 0;
+
+      const wrapper = document.createElement("div");
+      wrapper.className = "image-wrapper";
+
+      const link = document.createElement("a");
+      link.href = file.download_url;
+      link.target = "_blank";
+      link.rel = "noopener";
+
+      const image = document.createElement("img");
+      image.src = file.download_url;
+      image.alt = `Ozone Lounge Karaoke Page ${index + 1}`;
+      image.loading = "lazy";
+
+      const overlay = document.createElement("div");
+      overlay.className = "image-overlay";
+
+      const icon = document.createElement("div");
+      icon.className = "overlay-icon";
+      icon.textContent = "🔍";
+
+      overlay.appendChild(icon);
+      link.appendChild(image);
+      link.appendChild(overlay);
+      wrapper.appendChild(link);
+
+      const info = document.createElement("div");
+      info.className = "image-info";
+
+      const title = document.createElement("h2");
+      title.className = "image-title";
+      title.textContent = `Karaoke Page ${String(index + 1).padStart(2, "0")}`;
+
+      const description = document.createElement("p");
+      description.className = "image-description";
+      description.textContent = "Tap to view full size.";
+
+      info.appendChild(title);
+      info.appendChild(description);
+
+      article.appendChild(wrapper);
+      article.appendChild(info);
+
+      // Also support the existing modal if script.js/styles use it.
+      article.addEventListener("click", event => {
+        if (event.target.closest("a")) {
+          event.preventDefault();
+          modalImage.src = file.download_url;
+          modalImage.alt = `Ozone Lounge Karaoke Page ${index + 1}`;
+          modal.classList.add("active");
+          modal.style.display = "flex";
+        }
+      });
+
+      return article;
+    }
+
+    async function loadGallery() {
+      try {
+        const images = await discoverImages();
+
+        if (!images.length) {
+          gallery.innerHTML =
+            '<p class="error">No JPEG images were found in the repository.</p>';
+          return;
+        }
+
+        gallery.innerHTML = "";
+
+        images.forEach((file, index) => {
+          gallery.appendChild(createCard(file, index));
+        });
+      } catch (error) {
+        console.error(error);
+        gallery.innerHTML =
+          '<p class="error">Unable to load the karaoke pages. Please check that the repository is public and GitHub Pages is enabled.</p>';
+      }
+    }
+
+    function closeModal() {
+      modal.classList.remove("active");
+      modal.style.display = "none";
+      modalImage.src = "";
+    }
+
+    closeButton.addEventListener("click", closeModal);
+
+    modal.addEventListener("click", event => {
+      if (event.target === modal) closeModal();
+    });
+
+    document.addEventListener("keydown", event => {
+      if (event.key === "Escape") closeModal();
+    });
+
+    loadGallery();
+  </script>
+</body>
+</html>
